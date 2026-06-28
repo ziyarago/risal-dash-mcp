@@ -1,6 +1,18 @@
 // Pure bridge logic — maps a RisalDash device manifest to MCP tools and proxies
 // tool calls to the device's REST API. Kept free of the MCP SDK so it is unit-testable.
 
+// Sample manifest used when no live device is reachable, so the server still starts and
+// advertises tools (e.g. for registry introspection / trying it out without hardware).
+export const DEMO_MANIFEST = {
+  device: 'demo-greenhouse',
+  tools: [
+    { name: 'get_temperature', op: 'read', key: 'Temperature', type: 'number' },
+    { name: 'get_humidity', op: 'read', key: 'Humidity', type: 'number' },
+    { name: 'set_pump', op: 'write', key: 'Pump', type: 'boolean' },
+    { name: 'set_target', op: 'write', key: 'Target', type: 'number' },
+  ],
+};
+
 // Map GET /api/mcp/manifest -> MCP tool descriptors (read tools take no args; write
 // tools take a single `value`). The op/key/type fields are retained for dispatch.
 export function manifestToTools(manifest) {
